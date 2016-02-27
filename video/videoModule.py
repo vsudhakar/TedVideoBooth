@@ -22,6 +22,8 @@ def saveFilmToDisk(bufferName, outname):
 class VideoModule:
     videoTitle =  time.strftime("%Y_%m_%d_%H_%M_%S")
 
+    topic = ''
+
     continueRecord = True
 
     width = 300
@@ -37,10 +39,10 @@ class VideoModule:
     def getVideoDisplay(self):
         return self.disp
 
-    def recordVideo(self, cb, length=5):
+    def recordVideo(self, cb, topic, length=5):
         global BUFFER_NAME
 
-        BUFFER_NAME = 'buffer_' + time.strftime("%Y_%m_%d_%H_%M_%S") + '.avi'
+        BUFFER_NAME = topic + '_' + time.strftime("%Y_%m_%d_%H_%M_%S") + '.avi'
         vs = VideoStream(fps=24, filename=BUFFER_NAME, framefill=True)
         self.disp = Display((self.width, self.height))
         cam = Camera(1, prop_set={"width":self.width,"height":self.height})
@@ -74,4 +76,5 @@ class VideoModule:
         print "Set variable to false"
 
     def __init__(self, appendTitle):
+        self.topic = appendTitle
         self.videoTitle += appendTitle + ".mp4"

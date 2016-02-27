@@ -31,8 +31,10 @@ def externalKill():
 # 			for o in obj:
 # 				o.endCapture()
 
-vCapture = video('')
-aCapture = audio('')
+# vCapture = video('')
+# aCapture = audio('')
+# vCapture = None
+# aCapture = None
 
 n_finished = 0
 
@@ -47,24 +49,34 @@ def cb():
 cb_stop = cb
 
 def clipCapture(topic, stop):
-	videoTitle = topic
+	global n_finished
+	n_finished = 0
 
-	global vCapture
-	global aCapture
+	videoTitle = topic
 
 	global cb_stop
 
+	# global vCapture
+	# global aCapture
+
 	vCapture = video(videoTitle)
 	aCapture = audio(videoTitle)
+
+	print vCapture
+	print aCapture
 
 	cb_stop = stop
 
 	threads = []
 
 	threads.append(Thread(target=aCapture.recordAudio, args=(cb, LENGTH, )))
-	threads.append(Thread(target=vCapture.recordVideo, args=(cb, LENGTH, )))
+	threads.append(Thread(target=vCapture.recordVideo, args=(cb, topic, LENGTH, )))
 	#threads.append(Thread(target=clickKill, args=(vCapture, [vCapture, aCapture],)))
 	#threads.append(Thread(target=keypressKill, args=([vCapture, aCapture],)))
+
+	global objs
+
+	objs = [vCapture, aCapture]
 
 	for t in threads:
 		t.start()
@@ -74,10 +86,11 @@ def clipCapture(topic, stop):
 	# print "Output file: " + vCapture.getVideoTitle()
 
 	# saveFilmToDisk('buffer.avi', vCapture.getVideoTitle())
-	# aCapture.saveToDisk();
+	aCapture.saveToDisk(topic)
+
+	del aCapture
+	del vCapture
+
+	return None
 
 	# os.system("ffmpeg -i " + vCapture.getVideoTitle() + " -i " + aCapture.getAudioTitle() + " -c:v copy -c:a copy awesomeMix.avi" + "\n")
-
-	# global objs
-
-	# objs = [vCapture, aCapture]

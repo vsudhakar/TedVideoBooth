@@ -1,6 +1,7 @@
 import pyaudio
 import wave
 import time
+import string
 
 class AudioModule:
 	chunk = 1024
@@ -39,14 +40,19 @@ class AudioModule:
 		stream.stop_stream()
 		stream.close()
 		self.p.terminate()
+		print "PyAudio terminated"
+		print self.p
+		print "Audio module terminated"
 		cb()
 
 
 	def endCapture(self):
 		self.continueRecord = False
 
-	def saveToDisk(self):
-		wf = wave.open(self.audioTitle, 'wb')
+	def saveToDisk(self, title):
+		print "SAVING AUDIO FILE AS:::", self.getAudioTitle()
+		print "TITLE IS::: ", self.topic
+		wf = wave.open(title + "_" + self.audioTitle, 'wb')
 		wf.setnchannels(self.channels)
 		wf.setsampwidth(self.p.get_sample_size(self.format))
 		wf.setframerate(self.rate)
@@ -55,4 +61,6 @@ class AudioModule:
 		
 
 	def __init__(self, appendTitle):
-		self.audioTitle += appendTitle + ".wav"
+		print "AUDIO TITLE::: ", appendTitle
+		self.audioTitle += ".wav"
+		self.topic = str(appendTitle)
